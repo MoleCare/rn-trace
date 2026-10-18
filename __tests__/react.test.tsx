@@ -116,6 +116,19 @@ describe('useRenderTrace', () => {
     });
   });
 
+  it('marks a render where no prop changed', () => {
+    const { tracer, memory } = setup();
+    const values = { a: 1 };
+    const { rerender } = render(<Generic tracer={tracer} values={values} />);
+    rerender(<Generic tracer={tracer} values={values} />);
+    expect(memory.records()[1]?.data).toEqual({
+      name: 'Generic',
+      count: 2,
+      changed: [],
+      propsSame: true,
+    });
+  });
+
   it('records nothing for a disabled tracer', () => {
     const { tracer, memory } = setup(false);
     const { rerender } = render(<Generic tracer={tracer} values={{ a: 1 }} />);

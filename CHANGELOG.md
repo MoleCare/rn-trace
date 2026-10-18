@@ -13,6 +13,7 @@ All notable changes to this package are recorded here. The format follows
 
 ### Added
 
+- `useRenderTrace` marks a render where no prop changed with `propsSame: true`.
 - `createTracer` with `trace`, `warn`, `span`, `time` and `measured`; no global
   state.
 - `watchJsThread`: records `js-thread-blocked` with how long the JS thread
