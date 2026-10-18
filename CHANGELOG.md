@@ -6,6 +6,11 @@ All notable changes to this package are recorded here. The format follows
 
 ## Unreleased
 
+### Documentation
+
+- Reading the trace on iOS: `idevicesyslog` works over USB only; over Wi-Fi,
+  a file sink and `devicectl device copy from` (tested on an iPhone 16e).
+
 ### Added
 
 - `createTracer` with `trace`, `warn`, `span`, `time` and `measured`; no global

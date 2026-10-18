@@ -78,9 +78,51 @@ Read top to bottom: the tap arrived, the person tapped again after 1.3 s, the JS
 
 `consoleSink()` picks the console method for you. In a React Native release build it uses `console.error`, because on iOS `console.log` and `console.info` are dropped there and `console.error` still reaches the device log. Everywhere else it uses `console.log`. That includes React Native debug builds, where `console.error` would open a red LogBox for every line.
 
-- **iOS:** Console.app on a Mac with the phone connected, or `idevicesyslog -p <AppName>` (from libimobiledevice). Search for your tag.
+- **iOS over USB:** `idevicesyslog -p <AppName>` (from libimobiledevice), or Console.app. Search for your tag.
+- **iOS over Wi-Fi:** `idevicesyslog` cannot see a phone that is paired only over the network, and `log collect` needs `sudo`. Console.app still works. To read the trace from a script without a cable, write it to a file too (below).
 - **Android:** `adb logcat -s ReactNativeJS`.
 - **Web:** the browser console.
+
+In a React Native release build on iOS, JS `console` output goes only to the unified log (`os_log`). It does not appear in the app's stdout, so `xcrun devicectl device process launch --console` does not show it.
+
+### Reading the trace over Wi-Fi
+
+A sink is a plain function, so it can also append each line to a file in the app's Documents folder. This uses `react-native-fs`; any file API works.
+
+```ts
+import RNFS from 'react-native-fs';
+import {
+  combineSinks,
+  consoleSink,
+  createTracer,
+  formatRecord,
+} from '@molecare/rn-trace';
+
+const file = `${RNFS.DocumentDirectoryPath}/rn-trace.log`;
+let writes = RNFS.writeFile(file, '', 'utf8').catch(() => {});
+const fileSink = (record) => {
+  const line = `${formatRecord(record)}\n`;
+  // One write after another, so lines never interleave.
+  writes = writes
+    .then(() => RNFS.appendFile(file, line, 'utf8'))
+    .catch(() => {});
+};
+
+const tracer = createTracer({
+  tag: 'app',
+  sink: combineSinks(consoleSink(), fileSink),
+});
+```
+
+For a development-signed build, copy it to the Mac over Wi-Fi:
+
+```sh
+xcrun devicectl device copy from --device <UDID> \
+  --domain-type appDataContainer --domain-identifier <bundle id> \
+  --source Documents/rn-trace.log --destination ./rn-trace.log
+```
+
+Leave the file sink out of App Store builds: the file stays on the device and holds whatever you trace.
 
 To choose yourself: `consoleSink({ method: 'log', warnMethod: 'warn' })`.
 
