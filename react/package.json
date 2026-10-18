@@ -1,0 +1,6 @@
+{
+  "main": "../lib/commonjs/react.js",
+  "module": "../lib/module/react.js",
+  "types": "../lib/typescript/commonjs/src/react.d.ts",
+  "sideEffects": false
+}
