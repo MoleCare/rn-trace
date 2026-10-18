@@ -173,7 +173,7 @@ This checks every `intervalMs` (100). When a check arrives at least `thresholdMs
 
 ### `useRenderTrace(tracer, name, props)`
 
-This records every committed render with `changed` (the props that differ by reference). It also records `sameContent`: the changed props that are functions, or arrays or objects with the same contents as before. Those usually mean a parent creates them anew on each render, so a memoised child or an effect runs again for nothing.
+This records every committed render with `changed` (the props that differ by reference). It also records `sameContent`: the changed props that are functions, or arrays or objects with the same contents as before. Those usually mean a parent creates them anew on each render, so a memoised child or an effect runs again for nothing. A render with `propsSame: true` changed no prop at all: the component's own state changed, a context it reads changed, or its parent rendered again and it is not memoised.
 
 ### `useMountTrace(tracer, name)`
 

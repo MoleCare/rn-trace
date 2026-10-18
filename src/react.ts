@@ -31,7 +31,9 @@ function sameContents(a: unknown, b: unknown): boolean {
  * Records every committed render of a component and which props changed.
  * `sameContent` lists props that are a new object or function with the same
  * contents as before: the usual reason a memoised child or an effect runs
- * again when nothing really changed.
+ * again when nothing really changed. `propsSame` marks a render where no prop
+ * changed at all: the component's own state, a context it reads, or a parent
+ * that rendered again without memoising it.
  */
 export function useRenderTrace(
   tracer: Tracer,
@@ -71,6 +73,9 @@ export function useRenderTrace(
       count: count.current,
       changed,
       ...(sameContent.length > 0 && { sameContent }),
+      // Nothing it was given changed: its own state, a context it reads,
+      // or a parent that rendered again without memoising it.
+      ...(changed.length === 0 && { propsSame: true }),
     });
   });
 }
