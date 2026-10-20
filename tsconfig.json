@@ -23,5 +23,5 @@
     "types": ["jest", "node"],
     "verbatimModuleSyntax": true
   },
-  "include": ["src", "__tests__"]
+  "include": ["src", "__tests__", "demo", "vite.config.ts"]
 }
