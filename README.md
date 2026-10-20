@@ -145,6 +145,34 @@ const tracer = createTracer({ sink: combineSinks(consoleSink(), memory.sink) });
 // later: memory.records()
 ```
 
+## Sending traces to OpenTelemetry
+
+`otelSink` turns every record into an OpenTelemetry span, so taps, JS-thread blocks and slow responses show up next to your other traces (Jaeger, Grafana Tempo, Honeycomb, Datadog, anything that takes OTLP). rn-trace imports nothing from OpenTelemetry: pass the tracer your app already has.
+
+```ts
+import { trace } from '@opentelemetry/api';
+import {
+  combineSinks,
+  consoleSink,
+  createTracer,
+  otelSink,
+} from '@molecare/rn-trace';
+
+const tracer = createTracer({
+  tag: 'app',
+  sink: combineSinks(
+    consoleSink(),
+    otelSink({ tracer: trace.getTracer('my-app') })
+  ),
+});
+```
+
+- A measured record (`js-thread-blocked`, `responded`, a `span`, `time(...)`) becomes a span with its real start and end. An instant event (`tap`, `render`) becomes a span of no length.
+- The span is named after the event. Attributes are `rn_trace.tag`, `rn_trace.level`, `rn_trace.at_ms`, `rn_trace.duration_ms` and the record's data as `rn_trace.data.<key>`. Strings, numbers, booleans and arrays of one of those are kept; other values become JSON strings; `null`, `undefined`, `NaN` and `Infinity` are left out.
+- Options: `prefix` (default `rn_trace`), `spanName(record)`, and `clock` for tests.
+
+Setting up the OpenTelemetry SDK and an exporter is up to the app; the sink only needs `trace.getTracer(...)` to return a working tracer. What you trace goes wherever that exporter sends it, so the same rule applies: no personal or health data in `data`.
+
 ## API
 
 ### `createTracer(options?)`

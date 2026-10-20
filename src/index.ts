@@ -19,3 +19,10 @@ export { watchJsThread } from './jsThread';
 export type { WatchJsThreadOptions } from './jsThread';
 export { createInteraction } from './interaction';
 export type { Interaction, InteractionOptions } from './interaction';
+export { otelSink } from './otel';
+export type {
+  OtelAttributeValue,
+  OtelSinkOptions,
+  OtelSpanLike,
+  OtelTracerLike,
+} from './otel';
