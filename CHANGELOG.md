@@ -4,6 +4,14 @@ All notable changes to this package are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## Unreleased
+
+### Added
+
+- `otelSink`: sends every record to OpenTelemetry as a span, measured records
+  with their real start and end, data as `rn_trace.data.*` attributes. Takes
+  the app's own tracer; rn-trace still has no runtime dependencies.
+
 ## 0.1.0 (2026-10-20)
 
 First release.
