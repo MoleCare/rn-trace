@@ -10,6 +10,11 @@ Often the button worked. The JS thread was busy, so nothing appeared for a few s
 
 It is plain TypeScript with no native code. It works the same in React Native (iOS and Android) and in React on the web, and its output can be read in **release builds** on a real device.
 
+> **Not a medical device.** This is a debugging tool for app developers. It
+> measures how an app responds to taps and renders, never anything about a
+> person's health, and it makes no clinical claim. It records only what the
+> app passes to it: never put personal or health data in a trace.
+
 ## Install
 
 ```sh
