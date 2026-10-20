@@ -1,6 +1,12 @@
 # @molecare/rn-trace
 
+[![npm](https://img.shields.io/npm/v/@molecare/rn-trace)](https://www.npmjs.com/package/@molecare/rn-trace)
+[![CI](https://github.com/MoleCare/rn-trace/actions/workflows/ci.yml/badge.svg)](https://github.com/MoleCare/rn-trace/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+
 Find out why a tap "did nothing".
+
+**[Try the live demo](https://molecare.github.io/rn-trace/)**: tap a slow button in your browser and watch the trace, including the spans it sends to OpenTelemetry.
 
 Often the button worked. The JS thread was busy, so nothing appeared for a few seconds, and the person tapped again. Sometimes the second tap even undid the first. This package records the few facts that tell those cases apart:
 
@@ -9,6 +15,8 @@ Often the button worked. The JS thread was busy, so nothing appeared for a few s
 - **why a component rendered again**: which props changed, and which only became a new object with the same contents
 
 It is plain TypeScript with no native code. It works the same in React Native (iOS and Android) and in React on the web, and its output can be read in **release builds** on a real device.
+
+It can also send every record to **OpenTelemetry**, so taps and JS-thread blocks show up next to your other traces (see [Sending traces to OpenTelemetry](#sending-traces-to-opentelemetry)).
 
 > **Not a medical device.** This is a debugging tool for app developers. It
 > measures how an app responds to taps and renders, never anything about a
@@ -22,6 +30,8 @@ npm install @molecare/rn-trace
 ```
 
 React (18 or later) is needed only for the hooks in `@molecare/rn-trace/react`.
+
+No other dependencies. Every version from 0.2.0 is published from GitHub Actions with [npm provenance](https://docs.npmjs.com/generating-provenance-statements), so you can check it was built from this repository.
 
 ## Quick start
 
@@ -226,6 +236,10 @@ A sink that throws never breaks the app.
 Pass `enabled: false`, for example `enabled: __DEV__ || isInternalBuild`. Every call then returns at once, and `watchJsThread` does not start a timer.
 
 Do not put personal data in `data`. Anything you pass ends up in a device log.
+
+## Demo
+
+The [live demo](https://molecare.github.io/rn-trace/) is in [`demo/`](demo). It imports the package from `src/`, so it always shows the code on `main`. Run it locally with `npm run demo`.
 
 ## License
 
