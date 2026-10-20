@@ -75,7 +75,23 @@ jobs:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
-      - run: npm ci --ignore-scripts
-      - run: npm run build
+      # npm only lets a trusted publisher be set up for a package that already
+      # exists, so the first version is published by hand. Its GitHub Release
+      # then finds it on npm and stops here instead of failing.
+      - name: Skip a version that is already on npm
+        id: published
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "$NAME@$VERSION is already on npm; nothing to publish."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.published.outputs.skip != 'true'
+        run: npm ci --ignore-scripts
+      - if: steps.published.outputs.skip != 'true'
+        run: npm run build
       # Built above, once; --ignore-scripts stops prepack building it again.
-      - run: npm publish --access public --ignore-scripts
+      - if: steps.published.outputs.skip != 'true'
+        run: npm publish --access public --ignore-scripts
