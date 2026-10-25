@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "Find out why a tap did nothing: JS-thread stalls, slow tap-to-response, repeat taps and the props behind re-renders, for React Native and React. Plain TypeScript, no native code, readable in release builds.",
   "license": "Apache-2.0",
-  "author": "MoleCare LTD <info@molecare.co.uk> (https://www.molecare.co.uk)",
+  "author": "Yauhen Bichel <info@molecare.co.uk> (https://www.molecare.co.uk)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MoleCare/rn-trace.git"
