@@ -10,6 +10,19 @@ updates:
       dev-tooling:
         dependency-type: development
         update-types: ['minor', 'patch']
+    ignore:
+      # These move only with a coordinated change, never as a lockfile bump,
+      # the same rules as the sibling packages. typescript-eslint declares an
+      # upper bound on TypeScript, and minor versions can cross it too.
+      - dependency-name: 'typescript'
+        update-types:
+          ['version-update:semver-major', 'version-update:semver-minor']
+      # Babel 8 needs babel-jest and react-native-builder-bob to support it.
+      - dependency-name: '@babel/*'
+        update-types: ['version-update:semver-major']
+      # @types/node follows the Node version CI runs.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     open-pull-requests-limit: 5
 
   - package-ecosystem: github-actions
