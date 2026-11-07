@@ -23,6 +23,11 @@ updates:
       # @types/node follows the Node version CI runs.
       - dependency-name: '@types/node'
         update-types: ['version-update:semver-major']
+      # @opentelemetry/sdk-trace-base 2.12 accepts the API below 1.10 only.
+      # Move the API when the SDK's peer range allows it.
+      - dependency-name: '@opentelemetry/api'
+        update-types:
+          ['version-update:semver-major', 'version-update:semver-minor']
     open-pull-requests-limit: 5
 
   - package-ecosystem: github-actions
